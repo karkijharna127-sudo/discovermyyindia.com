@@ -1,0 +1,292 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discover My India | Smart Travel</title>
+<style>
+:root{--saffron:#f28c28;--green:#176b48;--cream:#fff8ed;--ink:#24342c}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--cream);color:var(--ink)}
+header{background:#153d30;color:white;padding:17px 7%;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.logo{font-size:24px;font-weight:800;color:#ffb44b}
+nav a{color:white;text-decoration:none;margin:0 10px;font-size:14px}
+.hero{min-height:390px;padding:75px 8%;color:white;background:linear-gradient(90deg,#102c24eF,#102c2470),url('https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1800&q=85') center/cover}
+.hero h1{font-size:clamp(35px,5vw,62px);max-width:700px;margin:0 0 15px}
+.hero p{font-size:18px;max-width:620px;line-height:1.7}
+.tag{color:#ffc16c;font-weight:bold;letter-spacing:2px}
+main{max-width:1150px;margin:35px auto;padding:0 18px}
+.panel{background:white;border-radius:18px;padding:25px;box-shadow:0 8px 35px #273b2d12;margin-bottom:28px}
+h2{margin-top:0;color:var(--green)}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}
+label{display:block;font-weight:700;font-size:13px;margin-bottom:7px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d9dfd7;border-radius:9px;background:white;font:inherit}
+button,.btn{border:0;border-radius:9px;padding:13px 18px;background:var(--green);color:white;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block}
+button:hover,.btn:hover{filter:brightness(1.12)}
+.primary{background:var(--saffron);color:#241b10}
+.note{font-size:13px;color:#657168;line-height:1.6}
+#results{display:none}
+.provider{border:1px solid #e4e8e2;border-radius:12px;padding:17px;display:flex;justify-content:space-between;align-items:center;gap:15px;margin:12px 0;flex-wrap:wrap}
+.provider h3{margin:0 0 6px}
+.provider p{margin:0;color:#667169;font-size:13px;line-height:1.5}
+.badge{background:#fff0d8;color:#8a4b00;padding:6px 9px;border-radius:20px;font-size:12px;font-weight:bold}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.place{overflow:hidden;border-radius:14px;background:white;border:1px solid #e9e9e2}
+.place img{width:100%;height:175px;object-fit:cover}
+.place-content{padding:16px}
+.place h3{margin:0 0 8px}
+.place p{font-size:14px;line-height:1.6;color:#657168}
+.place button{padding:10px 12px}
+#detail{display:none;line-height:1.8}
+.stars button{background:none;color:#e4a322;font-size:29px;padding:4px}
+footer{background:#153d30;color:white;padding:30px 7%;text-align:center;line-height:1.8}
+@media(max-width:600px){.hero{padding:48px 6%}header{padding:17px}.panel{padding:17px}.provider .btn{width:100%;text-align:center}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">✦ Discover My India</div>
+  <nav>
+    <a href="#planner">Plan Trip</a>
+    <a href="#places">Explore India</a>
+    <a href="#reviews">Reviews</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="tag">CULTURE • HERITAGE • ADVENTURE</div>
+  <h1>India is not just a destination. It's an experience.</h1>
+  <p>Discover hidden gems, explore local traditions and compare travel options for your next Indian adventure.</p>
+  <a class="btn primary" href="#planner">Plan Your Journey →</a>
+</section>
+
+<main>
+<section class="panel" id="planner">
+<h2>✈ Plan Your Journey</h2>
+<p class="note">Choose your journey and compare providers. Your stay location is completely optional.</p>
+<form id="tripForm">
+<div class="fields">
+<div><label for="from">From</label><input id="from" placeholder="e.g. Delhi" required></div>
+<div><label for="to">Destination</label><input id="to" placeholder="e.g. Jaipur" required></div>
+<div><label for="tripType">Trip type</label>
+<select id="tripType"><option value="oneway">Single trip</option><option value="round">Round trip</option></select></div>
+<div><label for="departure">Departure date</label><input id="departure" type="date" required></div>
+<div id="returnWrap" style="display:none"><label for="returnDate">Return date</label><input id="returnDate" type="date"></div>
+<div><label for="transport">Preferred transport</label>
+<select id="transport"><option value="all">Compare all modes</option><option value="flight">Flight</option><option value="train">Train</option><option value="bus">Bus</option></select></div>
+<div><label for="budget">Total travel budget (₹)</label><input id="budget" type="number" min="0" placeholder="e.g. 5000"></div>
+<div><label for="comfort">Priority</label>
+<select id="comfort"><option value="balanced">Balance price & comfort</option><option value="cheap">Lowest price</option><option value="comfort">Comfort & speed</option></select></div>
+<div><label for="stay">Stay location (optional)</label><input id="stay" placeholder="Leave blank if unknown"></div>
+</div>
+<p style="margin-top:20px"><button class="primary" type="submit">Compare Real Prices ↗</button></p>
+</form>
+</section>
+
+<section class="panel" id="results">
+<h2>Compare Travel Providers</h2>
+<p id="routeSummary"></p>
+<div class="note">Live provider results open on the respective websites. Prices, seat availability, taxes and booking fees must be confirmed there. This page does not invent or display estimated fares as actual prices.</div>
+<div id="providerList"></div>
+</section>
+
+<section class="panel" id="places">
+<h2>🇮🇳 Explore Incredible India</h2>
+<p class="note">Select a destination to explore attractions, history and local culture.</p>
+<div class="fields" style="margin-bottom:18px">
+<div><label for="stateSearch">Search a state or destination</label><input id="stateSearch" placeholder="e.g. Rajasthan, Kerala, Agra"></div>
+<div style="align-self:end"><button onclick="searchPlaces()">Explore Destinations</button></div>
+</div>
+<div class="cards" id="placeCards"></div>
+</section>
+
+<section class="panel" id="detail">
+<button onclick="document.getElementById('detail').style.display='none'">← Back to places</button>
+<div id="detailContent" style="margin-top:20px"></div>
+</section>
+
+<section class="panel">
+<h2>📍 Find Distance & Directions</h2>
+<p class="note">Allow location access to calculate your approximate straight-line distance from a selected place. Google Maps can provide road routes and navigation.</p>
+<button onclick="getLocation()">Use My Current Location</button>
+<p id="locationStatus" class="note"></p>
+<div class="fields">
+<div><label for="mapPlace">Destination / attraction</label><input id="mapPlace" placeholder="e.g. Hawa Mahal, Jaipur"></div>
+<div><label for="mapStay">Your stay (optional)</label><input id="mapStay" placeholder="Hotel or address"></div>
+</div>
+<p style="margin-top:15px"><button onclick="mapDirections('current')">Directions from my location</button> <button onclick="mapDirections('stay')">Directions from my stay</button></p>
+</section>
+
+<section class="panel" id="reviews">
+<h2>⭐ Share Your Travel Experience</h2>
+<div class="fields">
+<div><label for="reviewPlace">Place visited</label><input id="reviewPlace" placeholder="e.g. Jaipur"></div>
+<div><label for="reviewer">Display name</label><input id="reviewer" placeholder="Your name (optional)"></div>
+</div>
+<label style="margin-top:16px">Your rating</label>
+<div class="stars" id="starButtons">
+<button type="button" onclick="setRating(1)">☆</button><button type="button" onclick="setRating(2)">☆</button><button type="button" onclick="setRating(3)">☆</button><button type="button" onclick="setRating(4)">☆</button><button type="button" onclick="setRating(5)">☆</button>
+</div>
+<label for="reviewText">Your experience</label>
+<textarea id="reviewText" rows="4" placeholder="Share your experience, tips and favourite memories..."></textarea>
+<p><button onclick="submitReview()">Publish Review</button></p>
+<div id="reviewList"></div>
+<p class="note">Reviews on this demo are saved in this browser only. A shared commercial review system requires a server and database.</p>
+</section>
+</main>
+
+<footer>
+<strong>Discover My India</strong><br>
+Explore local culture. Travel thoughtfully. Experience India.<br>
+© 2026 Discover My India
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+$('tripType').addEventListener('change',()=>{
+  const round=$('tripType').value==='round';
+  $('returnWrap').style.display=round?'block':'none';
+  $('returnDate').required=round;
+});
+
+const today=new Date().toISOString().slice(0,10);
+$('departure').min=today;
+$('returnDate').min=today;
+
+function makeLink(name,from,to,date,ret,mode){
+  const q=new URLSearchParams({from,to,date,returnDate:ret||'',mode});
+  const route=encodeURIComponent(from)+'-'+encodeURIComponent(to);
+  const d=date.replaceAll('-','');
+  if(name==='Google Flights')
+    return 'https://www.google.com/travel/flights?q='+encodeURIComponent('Flights from '+from+' to '+to+' on '+date+(ret?' return '+ret:''))+'&curr=INR';
+  if(name==='Skyscanner')
+    return 'https://www.skyscanner.co.in/transport/flights/'+route+'/'+d+'/'+(ret?'?return='+ret.replaceAll('-',''):'');
+  if(name==='MakeMyTrip')
+    return 'https://www.makemytrip.com/';
+  if(name==='IRCTC')
+    return 'https://www.irctc.co.in/nget/train-search';
+  if(name===' redBus')
+    return 'https://www.redbus.in/';
+  if(name==='AbhiBus')
+    return 'https://www.abhibus.com/';
+  if(name==='ixigo')
+    return 'https://www.ixigo.com/';
+  return 'https://www.google.com/search?q='+encodeURIComponent(name+' '+from+' to '+to+' '+date);
+}
+
+$('tripForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const from=$('from').value.trim(),to=$('to').value.trim();
+  const date=$('departure').value,ret=$('tripType').value==='round'?$ ('returnDate').value:'';
+  if(!from||!to||!date){alert('Please enter your route and departure date.');return}
+  if($('tripType').value==='round'&&(!ret||ret<date)){alert('Please choose a valid return date.');return}
+  const mode=$('transport').value;
+  $('results').style.display='block';
+  $('routeSummary').textContent=from+' → '+to+' | '+date+(ret?' → '+ret:'')+' | '+(mode==='all'?'All transport modes':mode);
+  const providers=[];
+  if(mode==='all'||mode==='flight'){
+    providers.push(['Google Flights','Compare available airline and booking-site fares.','Flight']);
+    providers.push(['Skyscanner','Search flight fares across available providers.','Flight']);
+    providers.push(['MakeMyTrip','Check current fares and booking conditions.','Flight']);
+  }
+  if(mode==='all'||mode==='train'){
+    providers.push(['IRCTC','Check train schedules, availability and official booking fares.','Train']);
+    providers.push(['ixigo','Compare train options and check availability.','Train']);
+  }
+  if(mode==='all'||mode==='bus'){
+    providers.push([' redBus','Compare bus operators and available ticket prices.','Bus']);
+    providers.push(['AbhiBus','Check bus schedules, operators and fares.','Bus']);
+  }
+  $('providerList').innerHTML=providers.map(([name,desc,type])=>{
+    const clean=name.trim();
+    const url=makeLink(clean,from,to,date,ret,type);
+    return `<div class="provider"><div><h3>${clean}</h3><p>${desc}</p><p>Route: ${escapeHTML(from)} → ${escapeHTML(to)}</p></div><div><span class="badge">${type}</span><p style="margin:8px 0">Price: check provider</p><a class="btn" href="${url}" target="_blank" rel="noopener noreferrer">Check Live Price ↗</a></div></div>`;
+  }).join('');
+  $('results').scrollIntoView({behavior:'smooth'});
+});
+
+function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+const places=[
+{name:'Taj Mahal',state:'Uttar Pradesh',city:'Agra',image:'photo-1564507592333-c60657eea523',history:'Built by Mughal emperor Shah Jahan in memory of Mumtaz Mahal, the Taj Mahal was completed in the 17th century.',culture:'Mughal architecture, marble inlay craftsmanship and Agra cuisine.',tips:'Check official monument opening hours, entry rules and ticket prices before visiting.'},
+{name:'Jaipur City Palace',state:'Rajasthan',city:'Jaipur',image:'photo-1599661046827-dacff0c0f09a',history:'Jaipur was founded by Maharaja Sawai Jai Singh II in 1727. Its City Palace remains a major symbol of royal history.',culture:'Rajput architecture, block printing, blue pottery and Rajasthani food.',tips:'Explore the old city markets and verify palace ticket access in advance.'},
+{name:'Kerala Backwaters',state:'Kerala',city:'Alappuzha',image:'photo-1602216056096-3b40cc0c9944',history:'The backwaters are a network of lagoons, lakes and canals that have supported Kerala communities and trade for centuries.',culture:'Houseboats, coir crafts, seafood and traditional performing arts.',tips:'Compare licensed boat operators and confirm the full price before booking.'},
+{name:'Varanasi Ghats',state:'Uttar Pradesh',city:'Varanasi',image:'photo-1561361513-2d000a50f0dc',history:'Varanasi is one of the world’s oldest continuously inhabited cities and a major centre of Hindu pilgrimage and learning.',culture:'Ganga Aarti, silk weaving, classical music and local street food.',tips:'Respect religious customs and ask before photographing people.'},
+{name:'Golden Temple',state:'Punjab',city:'Amritsar',image:'photo-1514222134-b57cbb8ce073',history:'Harmandir Sahib is the central sacred shrine of Sikhism, associated with equality, service and community.',culture:'Langar, kirtan, Punjabi hospitality and Sikh traditions.',tips:'Cover your head, remove footwear and follow the shrine’s visitor guidance.'},
+{name:'Mysore Palace',state:'Karnataka',city:'Mysuru',image:'photo-1600100397608-f010b7b2b4e0',history:'Mysore Palace is associated with the Wadiyar dynasty and the royal history of the Kingdom of Mysore.',culture:'Dasara celebrations, Mysore silk, sandalwood crafts and South Indian cuisine.',tips:'Check photography restrictions and current visiting hours.'},
+{name:'Hawa Mahal',state:'Rajasthan',city:'Jaipur',image:'photo-1599661046827-dacff0c0f09a',history:'Built in 1799, Hawa Mahal is known for its distinctive honeycomb façade and many small windows.',culture:'Rajput design, traditional jewellery, textiles and Jaipur bazaars.',tips:'Explore nearby markets and check monument access before your visit.'},
+{name:'Darjeeling',state:'West Bengal',city:'Darjeeling',image:'photo-1544735716-392fe2489ffa',history:'Darjeeling developed as a Himalayan hill station and became internationally known for its tea and mountain scenery.',culture:'Tea gardens, Himalayan communities, momos and mountain rail heritage.',tips:'Weather can change quickly; check local transport and mountain visibility.'},
+{name:'Goa Beaches',state:'Goa',city:'Panaji',image:'photo-1512343879784-a960bf40e7f2',history:'Goa’s history reflects indigenous communities, maritime trade and centuries of Portuguese influence.',culture:'Konkani traditions, seafood, village festivals and distinctive architecture.',tips:'Follow beach safety flags and use authorised local transport.'},
+{name:'Red Fort',state:'Delhi',city:'New Delhi',image:'photo-1587474260584-136574528ed5',history:'Commissioned by Shah Jahan in the 17th century, the Red Fort served as a Mughal imperial residence.',culture:'Mughal architecture, Delhi street food, crafts and historic bazaars.',tips:'Check official entry arrangements and security restrictions.'},
+{name:'Meenakshi Temple',state:'Tamil Nadu',city:'Madurai',image:'photo-1606293926075-69a00dbfde81',history:'Meenakshi Amman Temple is a historic temple complex celebrated for its monumental gopurams and religious traditions.',culture:'Tamil architecture, temple festivals, classical arts and regional cuisine.',tips:'Follow dress and photography rules issued by temple authorities.'},
+{name:'Ajanta Caves',state:'Maharashtra',city:'Chhatrapati Sambhajinagar',image:'photo-1606293926075-69a00dbfde81',history:'Ajanta’s Buddhist cave monuments preserve ancient murals, sculptures and evidence of early Buddhist artistic traditions.',culture:'Buddhist heritage, rock-cut architecture and ancient Indian painting.',tips:'Check official opening days and transport options before travelling.'}
+];
+
+function photoURL(p){return 'https://images.unsplash.com/'+p.image+'?auto=format&fit=crop&w=800&q=80'}
+function renderPlaces(list){
+ $('placeCards').innerHTML=list.map((p,i)=>`<article class="place"><img src="${photoURL(p)}" alt="${p.name}" loading="lazy" onerror="this.src='https://placehold.co/800x450?text=Discover+India'"><div class="place-content"><h3>${p.name}</h3><p>📍 ${p.city}, ${p.state}</p><p>${p.culture}</p><button onclick="showPlace(${places.indexOf(p)})">Explore More →</button></div></article>`).join('');
+ if(!list.length)$('placeCards').innerHTML='<p>No matching destination found. Try a state or city name.</p>';
+}
+function searchPlaces(){
+ const q=$('stateSearch').value.trim().toLowerCase();
+ renderPlaces(places.filter(p=>(p.state+' '+p.city+' '+p.name).toLowerCase().includes(q)));
+}
+function showPlace(i){
+ const p=places[i];
+ $('detail').style.display='block';
+ $('detailContent').innerHTML=`<img src="${photoURL(p)}" alt="${p.name}" style="width:100%;max-height:350px;object-fit:cover;border-radius:12px"><h2>${p.name}</h2><p><strong>Location:</strong> ${p.city}, ${p.state}</p><h3>History & Heritage</h3><p>${p.history}</p><h3>Local Culture</h3><p>${p.culture}</p><h3>Travel Tips</h3><p>${p.tips}</p><button onclick="setMapPlace('${p.name.replaceAll("'","")}')">Explore on Google Maps ↗</button> <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(p.name+' '+p.city+' visitor information')}">More Information ↗</a>`;
+ $('mapPlace').value=p.name+', '+p.city;
+ $('detail').scrollIntoView({behavior:'smooth'});
+}
+function setMapPlace(p){$('mapPlace').value=p;mapDirections('current')}
+
+let userCoords=null;
+function getLocation(){
+ if(!navigator.geolocation){$('locationStatus').textContent='Geolocation is not supported by this browser.';return}
+ $('locationStatus').textContent='Requesting location permission...';
+ navigator.geolocation.getCurrentPosition(pos=>{
+ userCoords={lat:pos.coords.latitude,lon:pos.coords.longitude};
+ $('locationStatus').textContent='Location access granted. Choose a destination to view directions.';
+ },()=>{$('locationStatus').textContent='Location unavailable or permission denied. You can still use Google Maps with a manually entered starting point.'});
+}
+function mapDirections(source){
+ const dest=$('mapPlace').value.trim();
+ if(!dest){alert('Enter a destination first.');return}
+ let origin='';
+ if(source==='current'){
+  if(!userCoords){alert('Click "Use My Current Location" and allow location access first.');return}
+  origin=userCoords.lat+','+userCoords.lon;
+ }else{
+  origin=$('stay').value.trim();
+  if(!origin){alert('Stay location is optional. Enter it here only if you want directions from your stay.');return}
+ }
+ const url='https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(origin)+'&destination='+encodeURIComponent(dest)+'&travelmode=driving';
+ window.open(url,'_blank','noopener');
+}
+
+let rating=0;
+function setRating(n){
+ rating=n;
+ [...$('starButtons').querySelectorAll('button')].forEach((b,i)=>b.textContent=i<n?'★':'☆');
+}
+function submitReview(){
+ const place=$('reviewPlace').value.trim(),review=$('reviewText').value.trim();
+ if(!place||!review||!rating){alert('Enter a place, your review and a star rating.');return}
+ const reviews=JSON.parse(localStorage.getItem('dmi-reviews')||'[]');
+ reviews.unshift({place,name:$('reviewer').value.trim()||'Traveller',review,rating,date:new Date().toLocaleDateString()});
+ localStorage.setItem('dmi-reviews',JSON.stringify(reviews));
+ $('reviewText').value='';
+ renderReviews();
+}
+function renderReviews(){
+ const reviews=JSON.parse(localStorage.getItem('dmi-reviews')||'[]');
+ $('reviewList').innerHTML=reviews.map(r=>`<div class="provider"><div><h3>${escapeHTML(r.place)} · ${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</h3><p>${escapeHTML(r.review)}</p><p>By ${escapeHTML(r.name)} · ${r.date}</p></div></div>`).join('');
+}
+renderPlaces(places);
+renderReviews();
+</script>
+</body>
+</html>
